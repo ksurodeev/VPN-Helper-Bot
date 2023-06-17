@@ -2,7 +2,7 @@ from command import Command
 from docker import errors
 from typing import Union
 import re
-# from datetime import datetime
+from datetime import datetime
 from tabulate import tabulate
 
 
@@ -23,13 +23,16 @@ class Traffic_Status(Command):
             docker_output = self.container.exec_run(
                 'ipsec trafficstatus'
                 )[1].decode('utf-8')
+            for match in regex.finditer(docker_output):
+                for timestamp in match.group('start_time'):
+                    datetime.utcfromtimestamp(timestamp)
             result = [
                 match.groups() for match in regex.finditer(docker_output)
                 ]
             return tabulate(result,
                             headers=[
                                 'ext_ip',
-                                'start_time',
+                                'start time, UTC',
                                 'ingress_bytes',
                                 'egress_bytes',
                                 'username',
