@@ -7,4 +7,4 @@ class Check_Logs(Command):
         self.container = super().ConnectToContainer(self.container_id)
 
     def Execute(self) -> str:
-        print(self.container.logs(timestamps=True))
+        print(self.container.logs())
