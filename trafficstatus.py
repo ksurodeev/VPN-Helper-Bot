@@ -12,12 +12,15 @@ class Traffic_Status(Command):
         self.container = super().ConnectToContainer(self.container_id)
 
     def Execute(self) -> Union[None, tuple]:
-        regex = re.compile(r"(.* #[\d]+: .*] (?P<ext_ip>[\d.]+), .*,"
+        regex_ike = re.compile(
+                           r"(.* #[\d]+: .*] (?P<ext_ip>[\d.]+), .*,"
                            r" add_time=(?P<start_time>\d+),"
                            r" inBytes=(?P<ingress_bytes>\d+),"
                            r" outBytes=(?P<egress_bytes>\d+),"
                            r" id='(?P<username>.*)',"
                            r" lease=(?P<int_ip>[\d.]+/\d+))"
+                          )
+        regex_xauth = re.compile(
                            r"|(.* #[\d]+: .*] (?P<ext_ip_2>[\d.]+),"
                            r" username=(?P<username_2>.*), .*,"
                            r" add_time=(?P<start_time_2>\d+),"
@@ -29,23 +32,39 @@ class Traffic_Status(Command):
             docker_output = self.container.exec_run(
                 'ipsec trafficstatus'
                 )[1].decode('utf-8')
-            for match in regex.finditer(docker_output):
-                for timestamp in match.group('start_time'):
-                    datetime.utcfromtimestamp(int(timestamp))
-            result = [
-                match.groups() for match in regex.finditer(docker_output)
+#            for match in regex_ike.finditer(docker_output):
+#                for timestamp in match.group('start_time'):
+#                    datetime.utcfromtimestamp(int(timestamp))
+            ike_customers = [
+                match.groups() for match in regex_ike.finditer(docker_output)
                 ]
-            return tabulate(result,
-                            headers=[
-                                'ext_ip',
-                                'start time, UTC',
-                                'ingress_bytes',
-                                'egress_bytes',
-                                'username',
-                                'int_ip'
-                                ],
-                            tablefmt='psql'
-                            )
+            xauth_customers = [
+                match.groups() for match in regex_xauth.finditer(docker_output)
+            ]
+            return tabulate(
+                        ike_customers,
+                        headers=[
+                            'ext_ip',
+                            'start time, UTC',
+                            'ingress_bytes',
+                            'egress_bytes',
+                            'username',
+                            'int_ip'
+                            ],
+                        tablefmt='psql'
+                        ),
+            tabulate(
+                xauth_customers,
+                headers=[
+                            'ext_ip',
+                            'start time, UTC',
+                            'ingress_bytes',
+                            'egress_bytes',
+                            'username',
+                            'int_ip'
+                ],
+                tablefmt='psql'
+            )
         except errors.APIError:
             print('Error in docker. Can\'t execute command')
             return None
