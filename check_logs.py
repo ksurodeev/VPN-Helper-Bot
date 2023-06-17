@@ -7,4 +7,5 @@ class Check_Logs(Command):
         self.container = super().ConnectToContainer(self.container_id)
 
     def Execute(self) -> str:
-        print(self.container.logs())
+        for each in self.container.logs():
+            print(str(each, 'utf-8'))
