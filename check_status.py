@@ -8,4 +8,4 @@ class Check_Status(Command):
         self.Execute()
 
     def Execute(self) -> str:
-        print(self.container.status)
+        return self.container.status
