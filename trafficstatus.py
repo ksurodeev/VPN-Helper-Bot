@@ -3,6 +3,7 @@ from docker import errors
 from typing import Union
 import re
 # from datetime import datetime
+from tabulate import tabulate
 
 
 class Traffic_Status(Command):
@@ -22,8 +23,9 @@ class Traffic_Status(Command):
             output = self.container.exec_run(
                 'ipsec trafficstatus'
                 )[1].decode('utf-8')
-            m = regex.findall(output)
-            return m
+            match = regex.finditer(output)
+            print(tabulate(match, headers='keys', tablefmt='psql'))
+            return match.groupdict()
         except errors.APIError:
             print('Error in docker. Can\'t execute command')
             return None
