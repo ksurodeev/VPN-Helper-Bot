@@ -12,12 +12,18 @@ class Traffic_Status(Command):
         self.container = super().ConnectToContainer(self.container_id)
 
     def Execute(self) -> Union[None, tuple]:
-        regex = re.compile(r".* #[\d]+: .*] (?P<ext_ip>[\d.]+), .*,"
+        regex = re.compile(r"(.* #[\d]+: .*] (?P<ext_ip>[\d.]+), .*,"
                            r" add_time=(?P<start_time>\d+),"
                            r" inBytes=(?P<ingress_bytes>\d+),"
                            r" outBytes=(?P<egress_bytes>\d+),"
                            r" id='(?P<username>.*)',"
-                           r" lease=(?P<int_ip>[\d.]+/\d+)"
+                           r" lease=(?P<int_ip>[\d.]+/\d+))"
+                           r"|(.* #[\d]+: .*] (?P<ext_ip_2>[\d.]+),"
+                           r" username=(?P<username_2>.*), .*,"
+                           r" add_time=(?P<start_time_2>\d+),"
+                           r" inBytes=(?P<ingress_bytes_2>\d+),"
+                           r" outBytes=(?P<egress_bytes_2>\d+),"
+                           r" lease=(?P<int_ip_2>[\d.]+\/\d+))"
                            )
         try:
             docker_output = self.container.exec_run(
@@ -25,7 +31,7 @@ class Traffic_Status(Command):
                 )[1].decode('utf-8')
             for match in regex.finditer(docker_output):
                 for timestamp in match.group('start_time'):
-                    datetime.utcfromtimestamp(timestamp)
+                    datetime.utcfromtimestamp(int(timestamp))
             result = [
                 match.groups() for match in regex.finditer(docker_output)
                 ]
