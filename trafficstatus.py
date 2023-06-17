@@ -11,7 +11,7 @@ class Traffic_Status(Command):
     def Execute(self) -> Union[None, tuple]:
         try:
             return self.container.exec_run(
-                'ipsec-vpn-server service ipsec trafficstatus'
+                'ipsec-vpn-server ipsec trafficstatus'
                 )
         except errors.APIError:
             print('Error in docker. Can\'t execute command')
