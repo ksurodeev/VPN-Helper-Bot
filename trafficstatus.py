@@ -1,6 +1,8 @@
 from command import Command
 from docker import errors
 from typing import Union
+import re
+# from datetime import datetime
 
 
 class Traffic_Status(Command):
@@ -9,10 +11,19 @@ class Traffic_Status(Command):
         self.container = super().ConnectToContainer(self.container_id)
 
     def Execute(self) -> Union[None, tuple]:
+        regex = re.compile(r".* #[\d]+: .*] (?P<ext_ip>[\d.]+), .*,"
+                           r" add_time=(?P<start_time>\d+),"
+                           r" inBytes=(?P<ingress_bytes>\d+),"
+                           r" outBytes=(?P<egress_bytes>\d+),"
+                           r" id='(?P<username>.*)',"
+                           r" lease=(?P<int_ip>[\d.]+/\d+)"
+                           )
         try:
-            return self.container.exec_run(
+            output = self.container.exec_run(
                 'ipsec trafficstatus'
-                )
+                )[1].decode('utf-8')
+            m = regex.findall(output)
+            return m
         except errors.APIError:
             print('Error in docker. Can\'t execute command')
             return None

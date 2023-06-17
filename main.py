@@ -11,4 +11,3 @@ if __name__ == '__main__':
 #   check_logs.Execute()
     traffic_status = Traffic_Status('ipsec-vpn-server')
     print(traffic_status.Execute())
-    
