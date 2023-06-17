@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from docker import DockerClient
+import docker
 
 
 class Command(ABC):
@@ -7,10 +7,10 @@ class Command(ABC):
     The Command interface declares a method for executing a command.
     '''
 
-    def ConnectToContainer(self, container_id: str) -> DockerClient:
-        with DockerClient.from_env() as client:
-            container = client.containers.get(container_id)
-            return container
+    def ConnectToContainer(self, container_id: str):
+        client = docker.from_env()
+        container = client.containers.get(container_id)
+        return container
 
     @abstractmethod
     def Execute(self) -> None:
