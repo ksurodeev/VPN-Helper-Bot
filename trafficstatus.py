@@ -20,12 +20,23 @@ class Traffic_Status(Command):
                            r" lease=(?P<int_ip>[\d.]+/\d+)"
                            )
         try:
-            output = self.container.exec_run(
+            docker_output = self.container.exec_run(
                 'ipsec trafficstatus'
                 )[1].decode('utf-8')
-            match = regex.finditer(output)
-            print(tabulate(match, headers='keys', tablefmt='psql'))
-            return match.groupdict()
+            result = [
+                match.groups() for match in regex.finditer(docker_output)
+                ]
+            return tabulate(result,
+                            headers=[
+                                'ext_ip',
+                                'start_time',
+                                'ingress_bytes',
+                                'egress_bytes',
+                                'username',
+                                'int_ip'
+                                ],
+                            tablefmt='psql'
+                            )
         except errors.APIError:
             print('Error in docker. Can\'t execute command')
             return None
