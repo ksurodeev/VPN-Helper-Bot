@@ -41,10 +41,15 @@ class Traffic_Status(Command):
             xauth_customers = [
                 match.groups() for match in regex_xauth.finditer(docker_output)
             ]
-            return tabulate(ike_customers + xauth_customers,
+            return tabulate(ike_customers,
                             headers=['Ext IP', 'Int IP', 'Username',
                                      'Start Time', 'Ingress Bytes',
-                                     'Egress Bytes'],)
+                                     'Egress Bytes'],), tabulate(
+                                         xauth_customers,
+                                         headers=['Ext IP', 'Int IP',
+                                                  'Username', 'Start Time', 
+                                                  'Ingress Bytes', 
+                                                  'Egress Bytes'],)
         except errors.APIError:
             print('Error in docker. Can\'t execute command')
             return None
