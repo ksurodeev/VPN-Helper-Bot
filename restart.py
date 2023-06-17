@@ -11,7 +11,7 @@ class Restart(Command):
     def Execute(self) -> Union[None, tuple]:
         try:
             return self.container.exec_run(
-                'ipsec-vpn-server ipsec restart'
+                'ipsec restart'
                 )
         except errors.APIError:
             print('Error in docker prevent the restart of ipsec-vpn-server')
