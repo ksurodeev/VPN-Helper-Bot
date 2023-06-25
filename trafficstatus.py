@@ -2,7 +2,7 @@ from command import Command
 from docker import errors
 from typing import Union
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from tabulate import tabulate
 
 
@@ -56,7 +56,7 @@ class Traffic_Status(Command):
                     [
                         match.group('ext_ip'),
                         datetime.fromtimestamp(
-                            match.group('start_time'), tz='utc'
+                            match.group('start_time'), timezone.utc
                         ),
                         match.group('ingress_bytes'),
                         match.group('egress_bytes'),
