@@ -56,7 +56,7 @@ class Traffic_Status(Command):
                     [
                         match.group('ext_ip'),
                         datetime.fromtimestamp(
-                            match.group('start_time'), timezone.utc
+                            int(match.group('start_time')), timezone.utc
                         ),
                         match.group('ingress_bytes'),
                         match.group('egress_bytes'),
