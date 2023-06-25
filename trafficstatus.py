@@ -57,7 +57,7 @@ class Traffic_Status(Command):
                         match.group('ext_ip'),
                         datetime.fromtimestamp(
                             int(match.group('start_time')), timezone.utc
-                        ),
+                        ).strftime('%d-%m-%Y %H:%M:%S'),
                         match.group('ingress_bytes'),
                         match.group('egress_bytes'),
                         match.group('username'),
@@ -68,7 +68,7 @@ class Traffic_Status(Command):
                 ike_customers,
                 headers=[
                     'Ext. IP',
-                    'Start Time',
+                    'Start Time, UTC',
                     'inBytes',
                     'outBytes',
                     'Username',
