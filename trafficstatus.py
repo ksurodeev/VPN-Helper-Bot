@@ -56,12 +56,7 @@ class Traffic_Status(Command):
                 )
             ]
             return tabulate(
-                match.group('ext_ip'),
-                match.group('start_time'),
-                match.group('ingress_bytes'),
-                match.group('egress_bytes'),
-                match.group('username'),
-                match.group('int_ip'),
+                ike_customers,
                 headers=[
                     'Ext. IP',
                     'Start Time',
