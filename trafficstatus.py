@@ -36,14 +36,14 @@ class Traffic_Status(Command):
             r" id='(?P<username>.*)',"
             r" lease=(?P<int_ip>[\d.]+/\d+)"
         )
-        regex_xauth = re.compile(
-            r".* #[\d]+: .*] (?P<ext_ip>[\d.]+),"
-            r" username=(?P<username>.*), .*,"
-            r" add_time=(?P<start_time>\d+),"
-            r" inBytes=(?P<ingress_bytes>\d+),"
-            r" outBytes=(?P<egress_bytes>\d+),"
-            r" lease=(?P<int_ip>[\d.]+\/\d+)"
-        )
+        # regex_xauth = re.compile(
+        #     r".* #[\d]+: .*] (?P<ext_ip>[\d.]+),"
+        #     r" username=(?P<username>.*), .*,"
+        #     r" add_time=(?P<start_time>\d+),"
+        #     r" inBytes=(?P<ingress_bytes>\d+),"
+        #     r" outBytes=(?P<egress_bytes>\d+),"
+        #     r" lease=(?P<int_ip>[\d.]+\/\d+)"
+        # )
         for match in regex_customer_type.finditer(
                 self.Execute()
         ):
@@ -66,20 +66,20 @@ class Traffic_Status(Command):
                         'Int. IP'
                     ]
                 )
-            else:
-                xauth_customers = [
-                    match.groups() for match in regex_xauth.finditer(
-                        self.Execute()
-                    )
-                ]
-                return tabulate(
-                    xauth_customers,
-                    headers=[
-                        'Ext. IP',
-                        'Username',
-                        'Start Time',
-                        'inBytes',
-                        'outBytes',
-                        'Int. IP'
-                    ]
-                )
+            # else:
+            #    xauth_customers = [
+            #        match.groups() for match in regex_xauth.finditer(
+            #            self.Execute()
+            #        )
+            #    ]
+            #    return tabulate(
+            #        xauth_customers,
+            #        headers=[
+            #            'Ext. IP',
+            #            'Username',
+            #            'Start Time',
+            #            'inBytes',
+            #            'outBytes',
+            #            'Int. IP'
+            #        ]
+            #    )
