@@ -25,47 +25,62 @@ class Traffic_Status(Command):
             return None
 
     def represent_results(self: str) -> tabulate:
+        regex_customer_type = re.compile(
+            r'.* #[\d]+: "(?P<cust_type>ikev2.*)" .*'
+        )
         regex_ike = re.compile(
-                           r".* #[\d]+: .*] (?P<ext_ip>[\d.]+), .*,"
-                           r" add_time=(?P<start_time>\d+),"
-                           r" inBytes=(?P<ingress_bytes>\d+),"
-                           r" outBytes=(?P<egress_bytes>\d+),"
-                           r" id='(?P<username>.*)',"
-                           r" lease=(?P<int_ip>[\d.]+/\d+)"
-                        )
+            r".* #[\d]+: .*] (?P<ext_ip>[\d.]+), .*,"
+            r" add_time=(?P<start_time>\d+),"
+            r" inBytes=(?P<ingress_bytes>\d+),"
+            r" outBytes=(?P<egress_bytes>\d+),"
+            r" id='(?P<username>.*)',"
+            r" lease=(?P<int_ip>[\d.]+/\d+)"
+        )
         regex_xauth = re.compile(
-                           r".* #[\d]+: .*] (?P<ext_ip>[\d.]+),"
-                           r" username=(?P<username>.*), .*,"
-                           r" add_time=(?P<start_time>\d+),"
-                           r" inBytes=(?P<ingress_bytes>\d+),"
-                           r" outBytes=(?P<egress_bytes>\d+),"
-                           r" lease=(?P<int_ip>[\d.]+\/\d+)"
-                           )
-        ike_customers = [
-            match.groups() for match in regex_ike.finditer(self.Execute())
-        ]
-        xauth_customers = [
-            match.groups() for match in regex_xauth.finditer(self.Execute())
-        ]
-        tabulate(
-            ike_customers,
-            headers=[
-                'Ext. IP',
-                'Start Time',
-                'inBytes',
-                'outBytes',
-                'Username',
-                'Int. IP'
-            ]
+            r".* #[\d]+: .*] (?P<ext_ip>[\d.]+),"
+            r" username=(?P<username>.*), .*,"
+            r" add_time=(?P<start_time>\d+),"
+            r" inBytes=(?P<ingress_bytes>\d+),"
+            r" outBytes=(?P<egress_bytes>\d+),"
+            r" lease=(?P<int_ip>[\d.]+\/\d+)"
         )
-        tabulate(
-            xauth_customers,
-            headers=[
-                'Ext. IP',
-                'Username',
-                'Start Time',
-                'inBytes',
-                'outBytes',
-                'Int. IP'
-            ]
-        )
+        customers_types = [
+            match.groups() for match in regex_customer_type.finditer(
+                self.Execute()
+            )
+        ]
+        for each in customers_types:
+            if each.startwith('ike'):
+                ike_customers = [
+                    match.groups() for match in regex_ike.finditer(
+                        self.Execute()
+                    )
+                ]
+                return tabulate(
+                    ike_customers,
+                    headers=[
+                        'Ext. IP',
+                        'Start Time',
+                        'inBytes',
+                        'outBytes',
+                        'Username',
+                        'Int. IP'
+                    ]
+                )
+            else:
+                xauth_customers = [
+                    match.groups() for match in regex_xauth.finditer(
+                        self.Execute()
+                    )
+                ]
+                return tabulate(
+                    xauth_customers,
+                    headers=[
+                        'Ext. IP',
+                        'Username',
+                        'Start Time',
+                        'inBytes',
+                        'outBytes',
+                        'Int. IP'
+                    ]
+                )
