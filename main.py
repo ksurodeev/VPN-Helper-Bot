@@ -4,7 +4,7 @@ from trafficstatus import Traffic_Status
 
 if __name__ == '__main__':
     check_status = Check_Status('ipsec-vpn-server')
-    print('Status of your container is {}', check_status.Execute())
+    print('Status of your container is ', check_status.Execute(), '\n')
     if check_status.Execute() != 'running':
         print('Your container is not in running status')  # here we need to LOG
     check_logs = Check_Logs('ipsec-vpn-server')
