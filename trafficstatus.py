@@ -2,7 +2,7 @@ from command import Command
 from docker import errors
 from typing import Union
 import re
-# from datetime import datetime
+from datetime import datetime
 from tabulate import tabulate
 
 
@@ -50,15 +50,20 @@ class Traffic_Status(Command):
             customers_types = match.groups()
         for each in customers_types:
             # if 'ike' in each:
+            ike_customers = []
             for match in regex_ike.finditer(self.Execute()):
-                ike_customers = [
-                    match.group('ext_ip'),
-                    match.group('start_time'),
-                    match.group('ingress_bytes'),
-                    match.group('egress_bytes'),
-                    match.group('username'),
-                    match.group('int_ip')
-                ]
+                ike_customers.append(
+                    [
+                        match.group('ext_ip'),
+                        datetime.fromtimestamp(
+                            match.group('start_time'), tz='utc'
+                        ),
+                        match.group('ingress_bytes'),
+                        match.group('egress_bytes'),
+                        match.group('username'),
+                        match.group('int_ip')
+                    ]
+                )
             return tabulate(
                 ike_customers,
                 headers=[
