@@ -26,7 +26,7 @@ class Traffic_Status(Command):
 
     def represent_results(self: str) -> tabulate:
         regex_customer_type = re.compile(
-            r'.* #[\d]+: "(?P<cust_type>ikev2.*)" .*'
+            r'.* #[\d]+: (?P<cust_type>\".*\").*'
         )
         regex_ike = re.compile(
             r".* #[\d]+: .*] (?P<ext_ip>[\d.]+), .*,"
