@@ -44,13 +44,12 @@ class Traffic_Status(Command):
             r" outBytes=(?P<egress_bytes>\d+),"
             r" lease=(?P<int_ip>[\d.]+\/\d+)"
         )
-        customers_types = [
-            match.groups() for match in regex_customer_type.finditer(
+        for match in regex_customer_type.finditer(
                 self.Execute()
-            )
-        ]
+        ):
+            customers_types = match.groups()
         for each in customers_types:
-            if each.startwith('ike'):
+            if 'ike' in each:
                 ike_customers = [
                     match.groups() for match in regex_ike.finditer(
                         self.Execute()

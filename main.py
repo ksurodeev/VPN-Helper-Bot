@@ -6,8 +6,8 @@ if __name__ == '__main__':
     check_status = Check_Status('ipsec-vpn-server')
     print(check_status.Execute())
     if check_status != 'running':
-        print('Your container is not in running status')  # here we need to log
+        print('Your container is not in running status')  # here we need to LOG
     check_logs = Check_Logs('ipsec-vpn-server')
 #   check_logs.Execute()
     traffic_status = Traffic_Status('ipsec-vpn-server')
-    print(traffic_status.represent_results)
+    print(traffic_status.represent_results())
