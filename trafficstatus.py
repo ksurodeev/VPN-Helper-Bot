@@ -95,5 +95,4 @@ class Traffic_Status(Command):
                 #        ]
                 #    )
         except UnboundLocalError:
-            print('You have no any customers on your server')
-            return None
+            return 'You have no any customers on your server'
