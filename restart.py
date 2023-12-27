@@ -7,6 +7,7 @@ class Restart(Command):
     def __init__(self, container_id: str) -> None:
         self.container_id = container_id
         self.container = super().ConnectToContainer(self.container_id)
+        self.Execute()
 
     def Execute(self) -> Union[None, tuple]:
         try:
