@@ -33,7 +33,8 @@ class Traffic_Status(Command):
             r" add_time=(?P<start_time>\d+),"
             r" inBytes=(?P<ingress_bytes>\d+),"
             r" outBytes=(?P<egress_bytes>\d+),"
-            r" id='(?P<username>.*)',"
+            r" .*"
+            r" id='(?P<username>.*),"
             r" lease=(?P<int_ip>[\d.]+/\d+)"
         )
         # regex_xauth = re.compile(
